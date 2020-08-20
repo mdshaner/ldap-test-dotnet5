@@ -16,21 +16,12 @@ namespace LdapTest
 
         public bool Test(string username, string password, string domain)
         {
-            try
-            {
-                using LdapConnection ldapConnection = new LdapConnection(Identifier);
-                ldapConnection.AuthType = AuthType.Negotiate;
-                ldapConnection.Credential = new NetworkCredential(username, password, domain);
-                ldapConnection.Timeout = TimeSpan.FromSeconds(1);
-
-                // bind ldap connection...assume valid credentials if bind succeeds
-                ldapConnection.Bind();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            using LdapConnection ldapConnection = new LdapConnection(Identifier);
+            ldapConnection.AuthType = AuthType.Negotiate;
+            ldapConnection.Credential = new NetworkCredential(username, password, domain);
+            ldapConnection.Timeout = TimeSpan.FromSeconds(1);
+            ldapConnection.Bind();
+            return true;
         }
     }
 }
