@@ -6,14 +6,25 @@ namespace LdapTest
 {
     public class LdapTester
     {
+
+        public LdapTester(string ldapServer)
+        {
+            Identifier = new LdapDirectoryIdentifier(ldapServer);
+        }
+
+        private LdapDirectoryIdentifier Identifier { get; }
+
         public bool Test(string username, string password, string domain)
         {
-            LdapDirectoryIdentifier identifier = new LdapDirectoryIdentifier("");
-            NetworkCredential credential = new NetworkCredential(username, password, domain);
-            LdapConnection connection = new LdapConnection(identifier, credential, AuthType.Negotiate);
             try
             {
-                connection.Bind();
+                using LdapConnection ldapConnection = new LdapConnection(Identifier);
+                ldapConnection.AuthType = AuthType.Negotiate;
+                ldapConnection.Credential = new NetworkCredential(username, password, domain);
+                ldapConnection.Timeout = TimeSpan.FromSeconds(1);
+
+                // bind ldap connection...assume valid credentials if bind succeeds
+                ldapConnection.Bind();
                 return true;
             }
             catch (Exception ex)
